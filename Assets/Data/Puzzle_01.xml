@@ -1,0 +1,43 @@
+<Puzzle Name="Sample_01">
+  <Word>
+    <Letter pos="0" value="a"/>
+    <Letter pos="1" value="j"/>
+    <Letter pos="2" value="a"/>
+    <Letter pos="3" value="y"/>
+  </Word>
+  <Word>
+    <Letter pos="10" value="b"/>
+    <Letter pos="11" value="r"/>
+    <Letter pos="12" value="y"/>
+    <Letter pos="13" value="a"/>
+    <Letter pos="14" value="n"/>
+  </Word>
+  <Word>
+    <Letter pos="20" value="l"/>
+    <Letter pos="21" value="u"/>
+    <Letter pos="22" value="l"/>
+    <Letter pos="23" value="u"/>
+  </Word>
+  <Word>
+    <Letter pos="6" value="j"/>
+    <Letter pos="16" value="e"/>
+    <Letter pos="26" value="r"/>
+    <Letter pos="36" value="e"/>
+    <Letter pos="46" value="m"/>
+    <Letter pos="56" value="y"/>
+  </Word>
+  <Word>
+    <Letter pos="40" value="y"/>
+    <Letter pos="41" value="u"/>
+    <Letter pos="42" value="k"/>
+    <Letter pos="43" value="u"/>
+    <Letter pos="44" value="n"/>
+  </Word>
+  <Word>
+    <Letter pos="50" value="k"/>
+    <Letter pos="51" value="a"/>
+    <Letter pos="52" value="r"/>
+    <Letter pos="53" value="a"/>
+    <Letter pos="54" value="n"/>
+  </Word>
+</Puzzle>
