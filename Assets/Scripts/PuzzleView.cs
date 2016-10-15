@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.IO;
 
 public class PuzzleView : MonoBehaviour
 {
@@ -23,13 +25,24 @@ public class PuzzleView : MonoBehaviour
         Debug.Log("Inside PuzzleView.Start...");
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
 
+        // initialize
         AddTestWords();
         CreateTiles();
 
+        // generate
         words.Sort(Comparer);
         words.Reverse();
         order = words;
         GenerateCrossword();
+
+        // export
+        var serializer = new XmlSerializer(typeof(Puzzle));
+        var stream = new FileStream("Assets/Data/Puzzle_01.xml", FileMode.Open);
+        var puzzle = serializer.Deserialize(stream) as Puzzle;
+        stream.Close();
+
+        // debug
+
     }
 	
 	// Update is called once per frame
