@@ -13,9 +13,9 @@ public class PlayView : MonoBehaviour {
     private static readonly int ROWS = 10;
     private static readonly int EMPTY_TILE_INDEX = 52;
 
-    private Sprite[] tileSprites;
-    private List<GameObject> grid = new List<GameObject>();
-    private Puzzle currentPuzzle = null;
+    public Sprite[] tileSprites;
+    public List<GameObject> grid = new List<GameObject>();
+    public Puzzle currentPuzzle = null;
     
     // Use this for initialization
     void Start () {
@@ -61,12 +61,13 @@ public class PlayView : MonoBehaviour {
             foreach (var letter in word.letters)
             {
                 grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                grid[letter.index].GetComponent<Tile>().position = letter.index;
                 grid[letter.index].SetActive(true);
             }
         }
     }
 
-    private int GetIndexFromLetter(char letter)
+    public int GetIndexFromLetter(char letter)
     {
         return ((int)letter) - 97;
     }
