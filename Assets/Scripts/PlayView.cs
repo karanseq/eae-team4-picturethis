@@ -19,6 +19,14 @@ public class PlayView : MonoBehaviour {
 
     public List<GameObject> alphabetGrid = new List<GameObject>();
     public Puzzle currentPuzzle = null;
+
+    internal void moveAlphabet()
+    {
+        throw new NotImplementedException();
+    }
+
+    public int letterLocation;
+    public Word tempWord;
     
     // Use this for initialization
     void Start () {
@@ -51,6 +59,16 @@ public class PlayView : MonoBehaviour {
         }
     }
 
+    internal void ChangeTile(int alphabetPosition,bool isLastTile,Word word)
+    {
+        grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
+        grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
+        alphabetGrid[alphabetPosition].SetActive(false);
+        if(isLastTile)
+        {
+            CheckWord(word);
+        }
+    }
 
     private void CreateAlphabetTiles()
     {
@@ -79,7 +97,8 @@ public class PlayView : MonoBehaviour {
             if (!alphabetGrid[index].activeSelf)
             {
                 alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
-                //grid[letter.index].GetComponent<Tile>().position = letter.index;
+                alphabetGrid[index].GetComponent<Tile>().position = index;
+                alphabetGrid[index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
                 alphabetGrid[index].SetActive(true);
                 break;
             }
@@ -110,6 +129,7 @@ public class PlayView : MonoBehaviour {
             {
                 grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
                 grid[letter.index].GetComponent<Tile>().position = letter.index;
+                grid[letter.index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
                 grid[letter.index].SetActive(true);
             }
         }
@@ -123,6 +143,26 @@ public class PlayView : MonoBehaviour {
     public void OnBackButtonClicked()
     {
         SceneManager.LoadScene("PuzzleSelect");
+    }
+
+    internal void CheckWord(Word word)
+    {
+        bool isCorrect=true;
+        foreach (var letter in word.letters)
+        {
+           if(!(grid[letter.index].GetComponent<Tile>().originalValue==grid[letter.index].GetComponent<Tile>().newValue))
+            {
+                isCorrect = false;
+            }
+        }
+        if(isCorrect)
+        {
+            Debug.Log("Word is correct");
+        }
+        else
+        {
+            Debug.Log("Word is not correct");
+        }
     }
 }
 
