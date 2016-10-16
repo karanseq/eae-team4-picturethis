@@ -19,6 +19,7 @@ public class Tile : MonoBehaviour {
     {
         GameObject playView = GameObject.FindGameObjectWithTag("PlayView");
         Puzzle currentPuzzle= playView.GetComponent<PlayView>().currentPuzzle;
+        playView.GetComponent<PlayView>().ResetAlphabetTiles();
         Word tempWord=new Word();
         foreach (var word in currentPuzzle.words)
         {
@@ -29,17 +30,16 @@ public class Tile : MonoBehaviour {
                     tempWord = word;
                 }
                 playView.GetComponent<PlayView>().grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[playView.GetComponent<PlayView>().GetIndexFromLetter(letter.value[0])];
-                
             }
         }
         SelectWordTiles(tempWord, playView);
-        
     }
 
     private void SelectWordTiles(Word word, GameObject playView)
     {
         foreach (var letter in word.letters)
         {
+            playView.GetComponent<PlayView>().LoadAlphabetTiles(letter);
             playView.GetComponent<PlayView>().grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[53];
         }
     }
