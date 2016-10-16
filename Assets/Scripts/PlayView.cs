@@ -3,6 +3,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayView : MonoBehaviour {
 
@@ -68,6 +69,11 @@ public class PlayView : MonoBehaviour {
     private int GetIndexFromLetter(char letter)
     {
         return ((int)letter) - 97;
+    }
+
+    public void OnBackButtonClicked()
+    {
+        SceneManager.LoadScene("PuzzleSelect");
     }
 }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class PuzzleView : MonoBehaviour
 {
@@ -32,13 +33,7 @@ public class PuzzleView : MonoBehaviour
         CreateTiles();
 
         // generate
-        words.Sort(Comparer);
-        words.Reverse();
-        order = words;
-        GenerateCrossword();
-
-        // debug
-        ExportPuzzle();
+        GeneratePuzzle();
     }
 	
 	// Update is called once per frame
@@ -49,7 +44,7 @@ public class PuzzleView : MonoBehaviour
 
     private void AddTestWords()
     {
-        words.Add("karan");
+        /*words.Add("karan");
         //words.Add("sequeira");
         words.Add("jeremy");
         //words.Add("hodges");
@@ -60,7 +55,8 @@ public class PuzzleView : MonoBehaviour
         words.Add("yukun");
         //words.Add("peng");
         words.Add("ajay");
-        //words.Add("satish");
+        //words.Add("satish");*/
+        words = PuzzleInfoInstance.Instance.names;
     }
 
     static int Comparer(string a, string b)
@@ -85,6 +81,14 @@ public class PuzzleView : MonoBehaviour
                 grid.Add(newTile);
             }
         }
+    }
+
+    private void GeneratePuzzle()
+    {
+        words.Sort(Comparer);
+        words.Reverse();
+        order = words;
+        GenerateCrossword();
     }
 
     private void GenerateCrossword()
@@ -134,8 +138,6 @@ public class PuzzleView : MonoBehaviour
                 ++index;
             }
         }
-
-        grid[0].SetActive(true);
     }
 
     private void ClearBoard()
@@ -153,6 +155,7 @@ public class PuzzleView : MonoBehaviour
     private void ExportPuzzle()
     {
         var puzzle = new Puzzle();
+        puzzle.name = PuzzleInfoInstance.Instance.puzzleName;
 
         // add horizontal words
         foreach (KeyValuePair<string, Tuple<int, int, int>> hWord in horizontalWords)
@@ -194,6 +197,26 @@ public class PuzzleView : MonoBehaviour
         var stream = new FileStream("Assets/Data/WriteSample.xml", FileMode.Create);
         serializer.Serialize(stream, puzzle);
         stream.Close();
+    }
+
+    public void OnBackButtonClicked()
+    {
+        PuzzleInfoInstance.Instance.ResetPuzzleInfo();
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void OnResetButtonClicked()
+    {
+        horizontalWords.Clear();
+        verticalWords.Clear();
+        GeneratePuzzle();
+    }
+
+    public void OnSaveButtonClicked()
+    {
+        ExportPuzzle();
+        PuzzleInfoInstance.Instance.ResetPuzzleInfo();
+        SceneManager.LoadScene("MainMenu");
     }
 
     private int GetIndexFromLetter(char letter)

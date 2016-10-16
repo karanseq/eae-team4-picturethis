@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
@@ -13,8 +14,13 @@ public class MainMenu : MonoBehaviour {
 	
 	}
 
-    void OnButtonClick()
+    public void OnPlayClicked()
     {
+        SceneManager.LoadScene("PuzzleSelect");
+    }
 
+    public void OnCreateClicked()
+    {
+        SceneManager.LoadScene("PuzzleInfo");
     }
 }
