@@ -6,7 +6,7 @@ public class Tile : MonoBehaviour {
 
     public int position;
     public int originalValue;
-    public int newValue;
+    public int newValue=-1;
     GameObject obj;
     PlayView playView;
     internal bool isPlayable=true;
@@ -33,6 +33,7 @@ public class Tile : MonoBehaviour {
                     if (foundLocation)
                     {
                         playView.letterLocation = letter.index;
+                        playView.CheckWord(playView.tempWord);
                         break;
                     }
 
@@ -47,23 +48,15 @@ public class Tile : MonoBehaviour {
                         {
                             foundLocation = true;
                             playView.ChangeTile(position, false, playView.tempWord);
-                            //Do some activities, change the tile in view etc.
-                            //    letter.mo
-                            //playView.letterLocation=l
                         }
 
                     }
-                    //playView.moveAlphabet();
                 }
-                Debug.Log("jkkkkk " + playView.letterLocation);
             }
             else
             {
-                //GameObject playView = GameObject.FindGameObjectWithTag("PlayView");
                 Puzzle currentPuzzle = playView.currentPuzzle;
                 playView.ResetAlphabetTiles();
-                //Word tempWord = new Word();
-
                 foreach (var word in currentPuzzle.words)
                 {
                     foreach (var letter in word.letters)

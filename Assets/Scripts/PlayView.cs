@@ -160,6 +160,7 @@ public class PlayView : MonoBehaviour {
            if(!(grid[letter.index].GetComponent<Tile>().originalValue==grid[letter.index].GetComponent<Tile>().newValue))
             {
                 isCorrect = false;
+                break;
             }
         }
         if(isCorrect)
