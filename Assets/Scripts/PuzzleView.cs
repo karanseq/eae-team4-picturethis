@@ -15,6 +15,8 @@ public class PuzzleView : MonoBehaviour
     private Sprite[] tileSprites;
     private List<GameObject> grid = new List<GameObject>();
     private List<string> words = new List<string>();
+    private Dictionary<string, Tuple<int, int, int>> horizontalWords = new Dictionary<string, Tuple<int, int, int>>();
+    private Dictionary<string, Tuple<int, int, int>> verticalWords = new Dictionary<string, Tuple<int, int, int>>();
     private List<string> order;
 
     Crossword board = new Crossword(COLUMNS, ROWS);
@@ -35,14 +37,8 @@ public class PuzzleView : MonoBehaviour
         order = words;
         GenerateCrossword();
 
-        // export
-        var serializer = new XmlSerializer(typeof(Puzzle));
-        var stream = new FileStream("Assets/Data/Puzzle_01.xml", FileMode.Open);
-        var puzzle = serializer.Deserialize(stream) as Puzzle;
-        stream.Close();
-
         // debug
-
+        ExportPuzzle();
     }
 	
 	// Update is called once per frame
@@ -85,26 +81,40 @@ public class PuzzleView : MonoBehaviour
                 GameObject newTile = Instantiate(tile) as GameObject;
                 newTile.transform.position = new Vector3(offset_x + i * 0.7f, offset_y - j * 0.7f, 0);
                 newTile.name = "Tile" + i + "," + j;
-                //newTile.SetActive(false);
+                newTile.SetActive(false);
                 grid.Add(newTile);
             }
         }
     }
 
-    void GenerateCrossword()
+    private void GenerateCrossword()
     {
         board.Reset();
         ClearBoard();
 
         foreach (var word in order)
         {
-            Debug.Log("Added word:" + board.AddWord(word));
+            var wordLocation = board.AddWord(word);
+            switch (wordLocation.third)
+            {
+                case 0:
+                    verticalWords.Add(word, wordLocation);
+                    Debug.Log("Added vertical word:" + word + " at:" + wordLocation.first + "," + wordLocation.second);
+                    break;
+                case 1:
+                    horizontalWords.Add(word, wordLocation);
+                    Debug.Log("Added horizontal word:" + word + " at:" + wordLocation.first + "," + wordLocation.second);
+                    break;
+                default:
+                    Debug.Log("Did not add word:" + word + " at:" + wordLocation.first + "," + wordLocation.second);
+                    break;
+            }
         }
 
         ActualizeData();
     }
 
-    void ActualizeData()
+    private void ActualizeData()
     {
         var boardcopy = board.GetBoard;
         var index = 0;
@@ -124,9 +134,11 @@ public class PuzzleView : MonoBehaviour
                 ++index;
             }
         }
+
+        grid[0].SetActive(true);
     }
 
-    void ClearBoard()
+    private void ClearBoard()
     {
         var index = 0;
         for (var i = 0; i < board.N; ++i)
@@ -136,6 +148,52 @@ public class PuzzleView : MonoBehaviour
                 grid[index++].SetActive(false);
             }
         }
+    }
+
+    private void ExportPuzzle()
+    {
+        var puzzle = new Puzzle();
+
+        // add horizontal words
+        foreach (KeyValuePair<string, Tuple<int, int, int>> hWord in horizontalWords)
+        {
+            var wordString = hWord.Key;
+            var wordLocation = hWord.Value;
+
+            var word = new Word();
+            var startIndex = wordLocation.first + wordLocation.second * COLUMNS;
+            for (var i = 0; i < wordString.Length; ++i)
+            {
+                var letter = new Letter();
+                letter.index = startIndex + i;
+                letter.value = wordString[i] + "";
+                word.letters.Add(letter);
+            }
+            puzzle.words.Add(word);
+        }
+
+        // add vertical words
+        foreach (KeyValuePair<string, Tuple<int, int, int>> vWord in verticalWords)
+        {
+            var wordString = vWord.Key;
+            var wordLocation = vWord.Value;
+
+            var word = new Word();
+            var startIndex = wordLocation.first + wordLocation.second * COLUMNS;
+            for (var i = 0; i < wordString.Length; ++i)
+            {
+                var letter = new Letter();
+                letter.index = startIndex + (i * COLUMNS);
+                letter.value = wordString[i] + "";
+                word.letters.Add(letter);
+            }
+            puzzle.words.Add(word);
+        }
+
+        var serializer = new XmlSerializer(typeof(Puzzle));
+        var stream = new FileStream("Assets/Data/WriteSample.xml", FileMode.Create);
+        serializer.Serialize(stream, puzzle);
+        stream.Close();
     }
 
     private int GetIndexFromLetter(char letter)

@@ -161,7 +161,7 @@ public class Crossword {
         if (IsValidPosition(xStar, yStar)) _board[xStar, yStar] = '*';
     }
 
-    public int AddWord(string word)
+    public Tuple<int, int, int> AddWord(string word)
     {
 
         //var max = int.MaxValue;
@@ -180,12 +180,13 @@ public class Crossword {
                 _vCount++;
             var value = info.third == 0 ? _hCount : _vCount;
             PutWord(wordToInsert, info.first, info.second, info.third, value);
-            return info.third;
+            //return info.third;
+            return info;
         }
         #endregion
 
-        return -1;
-
+        //return -1;
+        return null;
     }
 
     List<Tuple<int, int, int>> FindPositions(string word)
