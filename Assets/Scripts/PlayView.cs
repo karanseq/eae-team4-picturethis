@@ -14,127 +14,57 @@ public class PlayView : MonoBehaviour {
 
     private Sprite[] tileSprites;
     private List<GameObject> grid = new List<GameObject>();
-    private List<string> words = new List<string>();
-    private List<string> order;
-
-    Crossword board = new Crossword(COLUMNS, ROWS);
+    private Puzzle currentPuzzle = null;
+    
     // Use this for initialization
     void Start () {
-        tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
-        AddWords();
+        tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");        
         CreateTiles();
-        words.Sort(Comparer);
-        words.Reverse();
-        order = words;
-        GenerateCrossword();
+
+        ReadPuzzle("Assets/Data/WriteSample.xml");
     }
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
 
-    private void AddWords()
-    {
-        var serializer = new XmlSerializer(typeof(Puzzle));
-        var stream = new FileStream("Assets/Data/Puzzle_01.xml", FileMode.Open);
-        var puzzle = serializer.Deserialize(stream) as Puzzle;
-        foreach (var word in puzzle.words)
-        {
-            string wordString = "";
-            foreach (var letter in word.letters)
-            {
-                wordString += letter.value;
-            }
-            words.Add(wordString);
-        }
-        stream.Close();
-
-        //words.Add("karan");
-        ////words.Add("sequeira");
-        //words.Add("jeremy");
-        ////words.Add("hodges");
-        //words.Add("bryan");
-        ////words.Add("sorensen");
-        //words.Add("lulu");
-        ////words.Add("hedrick");
-        //words.Add("yukun");
-        ////words.Add("peng");
-        //words.Add("ajay");
-        //words.Add("satish");
     }
 
     private void CreateTiles()
     {
-       
         var offset_x = -3.5f;
         var offset_y = 3.5f;
 
-        for (int i = 0; i < board.N; ++i)
+        for (int i = 0; i < ROWS; ++i)
         {
-            for (int j = 0; j < board.M; ++j)
+            for (int j = 0; j < COLUMNS; ++j)
             {
                 GameObject newTile = Instantiate(tile) as GameObject;
-                newTile.transform.position = new Vector3(offset_x + i * 0.7f, offset_y - j * 0.7f, 0);
+                newTile.transform.position = new Vector3(offset_x + j * 0.7f, offset_y - i * 0.7f, 0);
                 newTile.name = "Tile" + i + "," + j;
-                //newTile.SetActive(false);
+                newTile.SetActive(false);
                 grid.Add(newTile);
             }
         }
     }
-    void GenerateCrossword()
+
+    private void ReadPuzzle(string filePath)
     {
-        board.Reset();
-        ClearBoard();
+        // deserialize the file
+        var serializer = new XmlSerializer(typeof(Puzzle));
+        var stream = new FileStream(filePath, FileMode.Open);
+        currentPuzzle = serializer.Deserialize(stream) as Puzzle;
 
-        foreach (var word in order)
+        // set tiles for each letter of each word
+        foreach (var word in currentPuzzle.words)
         {
-            Debug.Log("Added word:" + board.AddWord(word));
-        }
-
-        ActualizeData();
-    }
-
-    void ActualizeData()
-    {
-        var boardcopy = board.GetBoard;
-        var index = 0;
-
-        for (var i = 0; i < board.N; ++i)
-        {
-            for (var j = 0; j < board.M; ++j)
+            foreach (var letter in word.letters)
             {
-                var letter = boardcopy[i, j] == '*' ? ' ' : boardcopy[i, j];
-
-                if (letter != ' ')
-                {
-                    // grid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter)];
-                    grid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[EMPTY_TILE_INDEX];
-                    grid[index].SetActive(true);
-                }
-
-                ++index;
+                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                grid[letter.index].SetActive(true);
             }
         }
     }
 
-    void ClearBoard()
-    {
-        var index = 0;
-        for (var i = 0; i < board.N; ++i)
-        {
-            for (var j = 0; j < board.M; ++j)
-            {
-                grid[index++].SetActive(false);
-            }
-        }
-    }
-
-    static int Comparer(string a, string b)
-    {
-        var temp = a.Length.CompareTo(b.Length);
-        return temp == 0 ? a.CompareTo(b) : temp;
-    }
     private int GetIndexFromLetter(char letter)
     {
         return ((int)letter) - 97;
