@@ -12,7 +12,9 @@ public class PlayView : MonoBehaviour {
     GameObject tile;
     private static readonly int COLUMNS = 10;
     private static readonly int ROWS = 10;
-    private static readonly int EMPTY_TILE_INDEX = 52;
+    internal static readonly int EMPTY_TILE_INDEX = 53;
+    internal static readonly int MAIN_SELECTED_TILE_INDEX = 52;
+    internal static readonly int OTHER_SELECTED_TILE_INDEX = 54;
 
     public Sprite[] tileSprites;
     public List<GameObject> grid = new List<GameObject>();
@@ -127,7 +129,7 @@ public class PlayView : MonoBehaviour {
         {
             foreach (var letter in word.letters)
             {
-                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[EMPTY_TILE_INDEX];
                 grid[letter.index].GetComponent<Tile>().position = letter.index;
                 grid[letter.index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
                 grid[letter.index].SetActive(true);
@@ -157,6 +159,12 @@ public class PlayView : MonoBehaviour {
         }
         if(isCorrect)
         {
+            foreach (var letter in word.letters)
+            {
+                //grid[letter.index].GetComponent<Tile>().isPlayable = false;
+                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[(GetIndexFromLetter(letter.value[0])+26)];
+
+            }
             Debug.Log("Word is correct");
         }
         else

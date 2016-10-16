@@ -69,7 +69,7 @@ public class Tile : MonoBehaviour {
                     {                        
                         playView.tempWord = word;
                     }
-                    playView.grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[playView.GetIndexFromLetter(letter.value[0])];
+                    playView.grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[PlayView.EMPTY_TILE_INDEX];
                 }
             }
             SelectWordTiles(playView.tempWord, playView);
@@ -89,7 +89,8 @@ public class Tile : MonoBehaviour {
             }
             playView.letterLocation = firstLetter.index;
             playView.LoadAlphabetTiles(letter);
-            playView.grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[53];
+            playView.grid[firstLetter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[PlayView.MAIN_SELECTED_TILE_INDEX];
+            playView.grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[PlayView.OTHER_SELECTED_TILE_INDEX];
         }
     }
 
