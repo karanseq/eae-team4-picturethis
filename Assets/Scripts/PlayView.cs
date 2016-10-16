@@ -63,13 +63,17 @@ public class PlayView : MonoBehaviour {
 
     internal void ChangeTile(int alphabetPosition,bool isLastTile,Word word)
     {
-        grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
-        grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
-        alphabetGrid[alphabetPosition].SetActive(false);
+        if (grid[letterLocation].GetComponent<Tile>().isPlayable)
+        {
+            grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
+            grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
+            alphabetGrid[alphabetPosition].SetActive(false);
+        }
         if(isLastTile)
         {
             CheckWord(word);
         }
+
     }
 
     private void CreateAlphabetTiles()
@@ -96,14 +100,15 @@ public class PlayView : MonoBehaviour {
         {
             System.Random rnd = new System.Random();
             int index = rnd.Next(0, 15);
-            if (!alphabetGrid[index].activeSelf)
-            {
-                alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
-                alphabetGrid[index].GetComponent<Tile>().position = index;
-                alphabetGrid[index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
-                alphabetGrid[index].SetActive(true);
-                break;
-            }
+               if (!alphabetGrid[index].activeSelf)
+                {
+                    alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                    alphabetGrid[index].GetComponent<Tile>().position = index;
+                    alphabetGrid[index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
+                    alphabetGrid[index].SetActive(true);
+                    break;
+                }
+            
         }
        
        
@@ -161,7 +166,7 @@ public class PlayView : MonoBehaviour {
         {
             foreach (var letter in word.letters)
             {
-                //grid[letter.index].GetComponent<Tile>().isPlayable = false;
+                grid[letter.index].GetComponent<Tile>().isPlayable = false;
                 grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[(GetIndexFromLetter(letter.value[0])+26)];
 
             }
