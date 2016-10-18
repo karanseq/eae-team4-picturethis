@@ -25,12 +25,6 @@ public class PuzzleInfo : MonoBehaviour {
     public void OnPuzzleNameEdited(string text)
     {
         PuzzleInfoInstance.Instance.puzzleName = text;
-        PuzzleInfoInstance.Instance.names.Add("karan");
-        PuzzleInfoInstance.Instance.names.Add("jeremy");
-        PuzzleInfoInstance.Instance.names.Add("bryan");
-        PuzzleInfoInstance.Instance.names.Add("lulu");
-        PuzzleInfoInstance.Instance.names.Add("ajay");
-        PuzzleInfoInstance.Instance.names.Add("yukun");
     }
 
     public void OnPersonNameEdited(string text)
@@ -39,7 +33,7 @@ public class PuzzleInfo : MonoBehaviour {
         text.Trim();
         if (text != "")
         {
-            //PuzzleInfoInstance.Instance.AddName(text);
+            PuzzleInfoInstance.Instance.names.Add(text);
         }
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Puzzle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Puzzle_02" picture="">
+  <Words>
+    <Word>
+      <Letters>
+        <Letter index="85" value="y" />
+        <Letter index="86" value="u" />
+        <Letter index="87" value="k" />
+        <Letter index="88" value="u" />
+        <Letter index="89" value="n" />
+      </Letters>
+    </Word>
+    <Word>
+      <Letters>
+        <Letter index="53" value="k" />
+        <Letter index="54" value="a" />
+        <Letter index="55" value="r" />
+        <Letter index="56" value="a" />
+        <Letter index="57" value="n" />
+      </Letters>
+    </Word>
+    <Word>
+      <Letters>
+        <Letter index="91" value="l" />
+        <Letter index="92" value="u" />
+        <Letter index="93" value="l" />
+        <Letter index="94" value="u" />
+      </Letters>
+    </Word>
+    <Word>
+      <Letters>
+        <Letter index="34" value="a" />
+        <Letter index="35" value="j" />
+        <Letter index="36" value="a" />
+        <Letter index="37" value="y" />
+      </Letters>
+    </Word>
+    <Word>
+      <Letters>
+        <Letter index="35" value="j" />
+        <Letter index="45" value="e" />
+        <Letter index="55" value="r" />
+        <Letter index="65" value="e" />
+        <Letter index="75" value="m" />
+        <Letter index="85" value="y" />
+      </Letters>
+    </Word>
+    <Word>
+      <Letters>
+        <Letter index="17" value="b" />
+        <Letter index="27" value="r" />
+        <Letter index="37" value="y" />
+        <Letter index="47" value="a" />
+        <Letter index="57" value="n" />
+      </Letters>
+    </Word>
+  </Words>
+</Puzzle>

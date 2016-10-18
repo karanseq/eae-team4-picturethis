@@ -43,7 +43,7 @@ public class PlayView : MonoBehaviour {
         LoadPhotograph();
         CreateTiles();
         CreateAlphabetTiles();
-        ReadPuzzle("Assets/Data/WriteSample.xml");
+        ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
     }
 	
 	// Update is called once per frame
