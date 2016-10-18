@@ -26,6 +26,8 @@ public class PlayView : MonoBehaviour {
     public Puzzle currentPuzzle = null;
     Sprite photograph;
 
+    public List<int> letterLocations = new List<int>();
+
     internal void moveAlphabet()
     {
         throw new NotImplementedException();
@@ -112,6 +114,21 @@ public class PlayView : MonoBehaviour {
         {
             grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
             grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
+            bool found=false;
+            foreach (var index in letterLocations)
+            {
+                if(found)
+                {
+                    if(grid[index].GetComponent<Tile>().isPlayable) { 
+                    grid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[PlayView.MAIN_SELECTED_TILE_INDEX];
+                    break;
+                    }
+                }
+                if(index==letterLocation)
+                {
+                    found = true;
+                }
+            }
             alphabetGrid[alphabetPosition].SetActive(false);
         }
         if(isLastTile)

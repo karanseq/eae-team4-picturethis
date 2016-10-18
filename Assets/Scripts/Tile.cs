@@ -69,18 +69,20 @@ public class Tile : MonoBehaviour {
                         playView.grid[letter.index].GetComponent<SpriteRenderer>().sprite = playView.GetComponent<PlayView>().tileSprites[PlayView.EMPTY_TILE_INDEX];
                     }
                 }
-                SelectWordTiles(playView.tempWord, playView);
+                SelectEmptyWordTiles(playView.tempWord, playView);
             }
         }
        
     }
 
-    private void SelectWordTiles(Word word, PlayView playView)
+    private void SelectEmptyWordTiles(Word word, PlayView playView)
     {
         bool first = true;
         Letter firstLetter = new Letter();
+        playView.letterLocations.Clear();
         foreach (var letter in word.letters)
         {
+            playView.letterLocations.Add(letter.index);
             if (first)
             {
                 firstLetter = letter;
