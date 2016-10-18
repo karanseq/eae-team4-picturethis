@@ -140,10 +140,11 @@ public class PlayView : MonoBehaviour {
 
     internal void LoadAlphabetTiles(Letter letter)
     {
-        while(true)
+        int index;
+        while (true)
         {
             System.Random rnd = new System.Random();
-            int index = rnd.Next(0, 15);
+            index = rnd.Next(0, 15);
                if (!alphabetGrid[index].activeSelf)
                 {
                     alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
