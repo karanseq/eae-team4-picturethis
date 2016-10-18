@@ -194,7 +194,7 @@ public class PuzzleView : MonoBehaviour
         }
 
         var serializer = new XmlSerializer(typeof(Puzzle));
-        var stream = new FileStream("Assets/Data/WriteSample.xml", FileMode.Create);
+        var stream = new FileStream("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml", FileMode.Create);
         serializer.Serialize(stream, puzzle);
         stream.Close();
     }

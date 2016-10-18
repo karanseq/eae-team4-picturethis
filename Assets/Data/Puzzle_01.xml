@@ -1,4 +1,5 @@
-<Puzzle Name="Sample_01">
+<?xml version="1.0" encoding="Windows-1252"?>
+<Puzzle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Puzzle_01" picture="">
   <Words>
     <Word>
       <Letters>

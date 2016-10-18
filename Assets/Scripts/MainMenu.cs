@@ -8,11 +8,6 @@ public class MainMenu : MonoBehaviour {
 	void Start () {
         Debug.Log("Inside MainMenu.Start...");
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void OnPlayClicked()
     {
