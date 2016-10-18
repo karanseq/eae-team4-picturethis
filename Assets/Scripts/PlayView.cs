@@ -142,16 +142,31 @@ public class PlayView : MonoBehaviour {
     internal void LoadAlphabetTiles(Letter letter)
     {
         int index;
+        System.Random rnd = new System.Random();
+        for (int i=0;i<4;i++)
+        {
+            index = rnd.Next(0, 20);
+            if (!alphabetGrid[index].activeSelf)
+            {
+                int letterIndex = rnd.Next(97, 124);
+                //char letterValue = GetCharacterFromIndex(letterIndex);
+                alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter((char)letterIndex)];
+                alphabetGrid[index].GetComponent<Tile>().position = index;
+                alphabetGrid[index].GetComponent<Tile>().originalValue = GetIndexFromLetter((char)letterIndex);
+                alphabetGrid[index].SetActive(true);
+                break;
+            }
+        }
         while (true)
         {
             Debug.Log("Test");
-            System.Random rnd = new System.Random();
-            index = rnd.Next(0, 15);
+            index = rnd.Next(0, 20);
                if (!alphabetGrid[index].activeSelf)
                 {
-                    alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                int letterIndex = GetIndexFromLetter(letter.value[0]);
+                    alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[letterIndex];
                     alphabetGrid[index].GetComponent<Tile>().position = index;
-                    alphabetGrid[index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
+                    alphabetGrid[index].GetComponent<Tile>().originalValue = letterIndex;
                     alphabetGrid[index].SetActive(true);
                     break;
                 }
@@ -160,6 +175,8 @@ public class PlayView : MonoBehaviour {
        
        
     }
+
+    
 
     internal void ResetAlphabetTiles()
     {
