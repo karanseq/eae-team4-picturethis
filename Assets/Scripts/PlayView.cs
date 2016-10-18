@@ -57,7 +57,8 @@ public class PlayView : MonoBehaviour {
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-        if (hit.collider != null)
+       // Debug.Log("Hit object: " + hit.collider.gameObject.name+" "+ hit.collider.gameObject.name.Trim().Equals("Family-Pic"));
+        if (hit.collider != null && hit.collider.gameObject.name.Trim().Equals("Family-pic"))
         {
             // Debug.DrawLine(ray.origin, hit.point);
             if (zoomedPic)
@@ -74,7 +75,7 @@ public class PlayView : MonoBehaviour {
                 hit.collider.gameObject.transform.position = picturePosition;
                 zoomedPic = true;
             }
-            Debug.Log("Hit object: " + hit.collider.gameObject.name);
+           
         }
     }
 
@@ -143,6 +144,7 @@ public class PlayView : MonoBehaviour {
         int index;
         while (true)
         {
+            Debug.Log("Test");
             System.Random rnd = new System.Random();
             index = rnd.Next(0, 15);
                if (!alphabetGrid[index].activeSelf)
