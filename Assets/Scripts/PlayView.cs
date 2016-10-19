@@ -40,15 +40,21 @@ public class PlayView : MonoBehaviour
     public AudioClip letterAdded;
     public AudioClip wordSelected;
 
+    GameObject[] finishObjects;
+
     // Use this for initialization
     void Start()
     {
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
+        finishObjects = GameObject.FindGameObjectsWithTag("GameOverScreen");
+        HideFinishScreen();
         LoadImage();
         CreateTiles();
         CreateAlphabetTiles();
         ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
     }
+
+   
 
     private void LoadImage()
     {
@@ -291,7 +297,8 @@ public class PlayView : MonoBehaviour
             AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(0, 0, 0));
             if (CheckPuzzleComplete())
             {
-                AudioSource.PlayClipAtPoint(puzzleCompleted, new Vector3(0, 0, 0)); 
+                AudioSource.PlayClipAtPoint(puzzleCompleted, new Vector3(0, 0, 0));
+                ShowFinishScreen();
             }
         }
         else
@@ -317,6 +324,32 @@ public class PlayView : MonoBehaviour
         return true;
 
         PuzzleNotCompleted: return false;
+    }
+
+    private void HideFinishScreen()
+    {
+        foreach (GameObject g in finishObjects)
+        {
+            g.SetActive(false);
+        }
+    }
+
+    private void ShowFinishScreen()
+    {
+        foreach (GameObject g in finishObjects)
+        {
+            g.SetActive(true);
+        }
+        ResetAlphabetTiles();
+    }
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("PuzzleSelect");
     }
 }
 
