@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System;
 
-public class PlayView : MonoBehaviour {
+public class PlayView : MonoBehaviour
+{
 
     [SerializeField]
     GameObject tile;
     private static readonly int COLUMNS = 10;
     private static readonly int ROWS = 10;
-    internal static readonly int EMPTY_TILE_INDEX = 53;
-    internal static readonly int MAIN_SELECTED_TILE_INDEX = 52;
+    internal static readonly int EMPTY_TILE_INDEX = 52;
+    internal static readonly int MAIN_SELECTED_TILE_INDEX = 53;
     internal static readonly int OTHER_SELECTED_TILE_INDEX = 54;
 
     public Sprite[] tileSprites;
@@ -28,16 +29,12 @@ public class PlayView : MonoBehaviour {
 
     public List<int> letterLocations = new List<int>();
 
-    internal void moveAlphabet()
-    {
-        throw new NotImplementedException();
-    }
-
     public int letterLocation;
     public Word tempWord;
-    
+
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
         photograph = Resources.Load<Sprite>("Family-Pic");
         LoadPhotograph();
@@ -45,9 +42,10 @@ public class PlayView : MonoBehaviour {
         CreateAlphabetTiles();
         ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Pressed left click, casting ray.");
@@ -59,7 +57,7 @@ public class PlayView : MonoBehaviour {
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-       // Debug.Log("Hit object: " + hit.collider.gameObject.name+" "+ hit.collider.gameObject.name.Trim().Equals("Family-Pic"));
+        // Debug.Log("Hit object: " + hit.collider.gameObject.name+" "+ hit.collider.gameObject.name.Trim().Equals("Family-Pic"));
         if (hit.collider != null && hit.collider.gameObject.name.Trim().Equals("Family-pic"))
         {
             // Debug.DrawLine(ray.origin, hit.point);
@@ -77,7 +75,7 @@ public class PlayView : MonoBehaviour {
                 hit.collider.gameObject.transform.position = picturePosition;
                 zoomedPic = true;
             }
-           
+
         }
     }
 
@@ -85,9 +83,9 @@ public class PlayView : MonoBehaviour {
     {
         GameObject photObject = GameObject.FindGameObjectWithTag("picture");
         //rend.sprite = photograph;
-        pictureScale=photObject.transform.localScale = new Vector3(1f, 0.56f, 0);
-        picturePosition=photObject.transform.position = new Vector3(0, 6.5f, 0);
-       // GetComponent<SpriteRenderer>().sprite = photograph;
+        pictureScale = photObject.transform.localScale = new Vector3(1f, 0.56f, 0);
+        picturePosition = photObject.transform.position = new Vector3(0, 6.5f, 0);
+        // GetComponent<SpriteRenderer>().sprite = photograph;
     }
 
     private void CreateTiles()
@@ -108,34 +106,54 @@ public class PlayView : MonoBehaviour {
         }
     }
 
-    internal void ChangeTile(int alphabetPosition,bool isLastTile,Word word)
+    internal void ChangeTile(int alphabetPosition, bool isLastTile, Word word)
     {
+        //CheckForNextPlayableTile();
+       
         if (grid[letterLocation].GetComponent<Tile>().isPlayable)
         {
             grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
             grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
-            bool found=false;
+
+
+            bool found = false;
             foreach (var index in letterLocations)
             {
-                if(found)
+                if (found)
                 {
-                    if(grid[index].GetComponent<Tile>().isPlayable) { 
-                    grid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[PlayView.MAIN_SELECTED_TILE_INDEX];
-                    break;
+                    if (grid[index].GetComponent<Tile>().isPlayable)
+                    {
+                        grid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[PlayView.MAIN_SELECTED_TILE_INDEX];
+                       // letterLocation = index;
+                        break;
                     }
                 }
-                if(index==letterLocation)
+                if (index == letterLocation)
                 {
                     found = true;
                 }
             }
             alphabetGrid[alphabetPosition].SetActive(false);
         }
-        if(isLastTile)
+        if (isLastTile)
         {
             CheckWord(word);
         }
 
+    }
+
+    private void CheckForNextPlayableTile()
+    {
+        int i = letterLocations.IndexOf(letterLocation);
+        i++;
+        //letterLocation = letterLocations[i];
+        if (!grid[letterLocations[i]].GetComponent<Tile>().isPlayable)
+        {
+            letterLocation = letterLocations[i];
+            Debug.Log("Checking for next tile");
+            CheckForNextPlayableTile();
+        }
+        
     }
 
     private void CreateAlphabetTiles()
@@ -160,7 +178,7 @@ public class PlayView : MonoBehaviour {
     {
         int index;
         System.Random rnd = new System.Random();
-        for (int i=0;i<4;i++)
+        for (int i = 0; i < 4; i++)
         {
             index = rnd.Next(0, 20);
             if (!alphabetGrid[index].activeSelf)
@@ -178,22 +196,22 @@ public class PlayView : MonoBehaviour {
         {
             Debug.Log("Test");
             index = rnd.Next(0, 20);
-               if (!alphabetGrid[index].activeSelf)
-                {
+            if (!alphabetGrid[index].activeSelf)
+            {
                 int letterIndex = GetIndexFromLetter(letter.value[0]);
-                    alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[letterIndex];
-                    alphabetGrid[index].GetComponent<Tile>().position = index;
-                    alphabetGrid[index].GetComponent<Tile>().originalValue = letterIndex;
-                    alphabetGrid[index].SetActive(true);
-                    break;
-                }
-            
+                alphabetGrid[index].GetComponent<SpriteRenderer>().sprite = tileSprites[letterIndex];
+                alphabetGrid[index].GetComponent<Tile>().position = index;
+                alphabetGrid[index].GetComponent<Tile>().originalValue = letterIndex;
+                alphabetGrid[index].SetActive(true);
+                break;
+            }
+
         }
-       
-       
+
+
     }
 
-    
+
 
     internal void ResetAlphabetTiles()
     {
@@ -205,6 +223,7 @@ public class PlayView : MonoBehaviour {
 
     private void ReadPuzzle(string filePath)
     {
+        System.Random rnd = new System.Random();
         // deserialize the file
         var serializer = new XmlSerializer(typeof(Puzzle));
         var stream = new FileStream(filePath, FileMode.Open);
@@ -213,9 +232,27 @@ public class PlayView : MonoBehaviour {
         // set tiles for each letter of each word
         foreach (var word in currentPuzzle.words)
         {
+            int lettersShown = 0;
+            List<int> showTileIndex=new List<int>();
+            showTileIndex.Add(rnd.Next(0, word.letters.Count));
+            int i = 0;
             foreach (var letter in word.letters)
             {
-                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[EMPTY_TILE_INDEX];
+                i++;
+                if ((showTileIndex.IndexOf(i)!=-1 && (Math.Floor((float)word.letters.Count / 2) >= 3)) 
+                    || (showTileIndex.IndexOf(i) != -1 && (Math.Floor((float)word.letters.Count / 2) < 3)))
+                {
+                    lettersShown++;
+                    grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                    grid[letter.index].GetComponent<Tile>().newValue = GetIndexFromLetter(letter.value[0]);
+                    grid[letter.index].GetComponent<Tile>().isPlayable = false;
+                }
+                else
+                {
+                    if(grid[letter.index].GetComponent<Tile>().isPlayable)
+                    grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[EMPTY_TILE_INDEX];
+                   
+                }
                 grid[letter.index].GetComponent<Tile>().position = letter.index;
                 grid[letter.index].GetComponent<Tile>().originalValue = GetIndexFromLetter(letter.value[0]);
                 grid[letter.index].SetActive(true);
@@ -223,6 +260,7 @@ public class PlayView : MonoBehaviour {
         }
     }
 
+    
     public int GetIndexFromLetter(char letter)
     {
         return ((int)letter) - 97;
@@ -235,21 +273,21 @@ public class PlayView : MonoBehaviour {
 
     internal void CheckWord(Word word)
     {
-        bool isCorrect=true;
+        bool isCorrect = true;
         foreach (var letter in word.letters)
         {
-           if(!(grid[letter.index].GetComponent<Tile>().originalValue==grid[letter.index].GetComponent<Tile>().newValue))
+            if (!(grid[letter.index].GetComponent<Tile>().originalValue == grid[letter.index].GetComponent<Tile>().newValue))
             {
                 isCorrect = false;
                 break;
             }
         }
-        if(isCorrect)
+        if (isCorrect)
         {
             foreach (var letter in word.letters)
             {
                 grid[letter.index].GetComponent<Tile>().isPlayable = false;
-                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[(GetIndexFromLetter(letter.value[0])+26)];
+               // grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[(GetIndexFromLetter(letter.value[0]) + 26)];
 
             }
             Debug.Log("Word is correct");
