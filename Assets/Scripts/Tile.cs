@@ -100,6 +100,7 @@ public class Tile : MonoBehaviour {
     
     private void SelectEmptyWordTiles(Word word, PlayView playView)
     {
+        AudioSource.PlayClipAtPoint(playView.wordSelected, new Vector3(0, 0, 0));
         bool first = true;
         Letter firstLetter = new Letter();
         playView.letterLocations.Clear();

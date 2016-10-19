@@ -37,6 +37,8 @@ public class PlayView : MonoBehaviour
     public AudioClip wordFinishCorrect;
     public AudioClip wordFinishWrong;
     public AudioClip puzzleCompleted;
+    public AudioClip letterAdded;
+    public AudioClip wordSelected;
 
     // Use this for initialization
     void Start()
@@ -106,7 +108,6 @@ public class PlayView : MonoBehaviour
     internal void ChangeTile(int alphabetPosition, bool isLastTile, Word word)
     {
         //CheckForNextPlayableTile();
-       
         if (grid[currentLetterLocation].GetComponent<Tile>().isPlayable)
         {
             grid[currentLetterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
