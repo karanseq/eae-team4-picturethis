@@ -36,6 +36,7 @@ public class PlayView : MonoBehaviour
 
     public AudioClip wordFinishCorrect;
     public AudioClip wordFinishWrong;
+    public AudioClip puzzleCompleted;
 
     // Use this for initialization
     void Start()
@@ -87,7 +88,7 @@ public class PlayView : MonoBehaviour
     private void CreateTiles()
     {
         var offset_x = -3.5f;
-        var offset_y = 3.5f;
+        var offset_y = 2f;
 
         for (int i = 0; i < ROWS; ++i)
         {
@@ -155,7 +156,7 @@ public class PlayView : MonoBehaviour
     private void CreateAlphabetTiles()
     {
         var offset_x = -3.5f;
-        var offset_y = -5.5f;
+        var offset_y = -6.5f;
 
         for (int i = 0; i < 2; ++i)
         {
@@ -190,7 +191,6 @@ public class PlayView : MonoBehaviour
         }
         while (true)
         {
-            Debug.Log("Test");
             index = rnd.Next(0, 20);
             if (!alphabetGrid[index].activeSelf)
             {
@@ -287,14 +287,35 @@ public class PlayView : MonoBehaviour
 
             }
             Debug.Log("Word is correct");
-            AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(5, 1, 2));
+            AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(0, 0, 0));
+            if (CheckPuzzleComplete())
+            {
+                AudioSource.PlayClipAtPoint(puzzleCompleted, new Vector3(0, 0, 0)); 
+            }
         }
         else
         {
             if(currentLetterLocation==word.letters[word.letters.Count-1].index)
-            AudioSource.PlayClipAtPoint(wordFinishWrong, new Vector3(5, 1, 2));
+            AudioSource.PlayClipAtPoint(wordFinishWrong, new Vector3(0, 0, 0));
             Debug.Log("Word is not correct");
         }
+    }
+
+    private bool CheckPuzzleComplete()
+    {        
+        foreach (var word in currentPuzzle.words)
+        {            
+            foreach (var letter in word.letters)
+            {
+               if (grid[letter.index].GetComponent<Tile>().isPlayable)
+                {
+                    goto PuzzleNotCompleted;
+                }
+            }
+        }
+        return true;
+
+        PuzzleNotCompleted: return false;
     }
 }
 
