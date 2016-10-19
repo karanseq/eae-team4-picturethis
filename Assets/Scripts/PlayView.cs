@@ -29,7 +29,7 @@ public class PlayView : MonoBehaviour
 
     public List<int> letterLocations = new List<int>();
 
-    public int letterLocation;
+    public int currentLetterLocation;
     public Word tempWord;
 
     // Use this for initialization
@@ -110,10 +110,10 @@ public class PlayView : MonoBehaviour
     {
         //CheckForNextPlayableTile();
        
-        if (grid[letterLocation].GetComponent<Tile>().isPlayable)
+        if (grid[currentLetterLocation].GetComponent<Tile>().isPlayable)
         {
-            grid[letterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
-            grid[letterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
+            grid[currentLetterLocation].GetComponent<SpriteRenderer>().sprite = alphabetGrid[alphabetPosition].GetComponent<SpriteRenderer>().sprite;
+            grid[currentLetterLocation].GetComponent<Tile>().newValue = alphabetGrid[alphabetPosition].GetComponent<Tile>().originalValue;
 
 
             bool found = false;
@@ -128,7 +128,7 @@ public class PlayView : MonoBehaviour
                         break;
                     }
                 }
-                if (index == letterLocation)
+                if (index == currentLetterLocation)
                 {
                     found = true;
                 }
@@ -144,12 +144,12 @@ public class PlayView : MonoBehaviour
 
     private void CheckForNextPlayableTile()
     {
-        int i = letterLocations.IndexOf(letterLocation);
+        int i = letterLocations.IndexOf(currentLetterLocation);
         i++;
         //letterLocation = letterLocations[i];
         if (!grid[letterLocations[i]].GetComponent<Tile>().isPlayable)
         {
-            letterLocation = letterLocations[i];
+            currentLetterLocation = letterLocations[i];
             Debug.Log("Checking for next tile");
             CheckForNextPlayableTile();
         }
