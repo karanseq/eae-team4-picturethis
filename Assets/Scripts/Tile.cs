@@ -33,9 +33,9 @@ public class Tile : MonoBehaviour {
                 {
                     Letter letter = playView.tempWord.letters[i];
                     if (foundLocation)
-                    {
-                        playView.currentLetterLocation = SetLetterLocation(playView.tempWord.letters,i);                         
-                        playView.CheckWord(playView.tempWord);
+                    {                     
+                      //  playView.CheckWord(playView.tempWord);
+                        playView.currentLetterLocation = SetLetterLocation(playView.tempWord.letters, i);
                         break;
                     }
 
@@ -79,11 +79,21 @@ public class Tile : MonoBehaviour {
 
     private int SetLetterLocation(List<Letter> letters, int i)
     {
-        if(!playView.grid[letters[i].index].GetComponent<Tile>().isPlayable && (i < letters.Count-1))
+        if(!playView.grid[letters[i].index].GetComponent<Tile>().isPlayable)
         {
-            i++;
-            SetLetterLocation(letters,i);
+            if (i >= letters.Count-1) {
+                playView.currentLetterLocation = letters[i].index;
+                playView.CheckWord(playView.tempWord);
+                return letters[i].index;
+            }
+            else
+            {
+                i++;
+                SetLetterLocation(letters, i);
+            }
+                
         }
+       
         return letters[i].index;
     }
 

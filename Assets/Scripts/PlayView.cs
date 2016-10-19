@@ -34,6 +34,9 @@ public class PlayView : MonoBehaviour
     public int currentLetterLocation;
     public Word tempWord;
 
+    public AudioClip wordFinishCorrect;
+    public AudioClip wordFinishWrong;
+
     // Use this for initialization
     void Start()
     {
@@ -284,9 +287,12 @@ public class PlayView : MonoBehaviour
 
             }
             Debug.Log("Word is correct");
+            AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(5, 1, 2));
         }
         else
         {
+            if(currentLetterLocation==word.letters[word.letters.Count-1].index)
+            AudioSource.PlayClipAtPoint(wordFinishWrong, new Vector3(5, 1, 2));
             Debug.Log("Word is not correct");
         }
     }
