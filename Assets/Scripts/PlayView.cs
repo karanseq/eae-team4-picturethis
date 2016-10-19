@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.UI;
 
 public class PlayView : MonoBehaviour
 {
@@ -25,7 +26,8 @@ public class PlayView : MonoBehaviour
 
     public List<GameObject> alphabetGrid = new List<GameObject>();
     public Puzzle currentPuzzle = null;
-    Sprite photograph;
+    Sprite loadPic;
+    public Image photograph;
 
     public List<int> letterLocations = new List<int>();
 
@@ -36,57 +38,48 @@ public class PlayView : MonoBehaviour
     void Start()
     {
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
-        photograph = Resources.Load<Sprite>("Family-Pic");
-        LoadPhotograph();
+        LoadImage();
         CreateTiles();
         CreateAlphabetTiles();
         ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
     }
 
+    private void LoadImage()
+    {
+        photograph = GameObject.FindObjectOfType<Image>();
+        loadPic = Resources.Load<Sprite>("Family-pic");
+        photograph.sprite = loadPic;
+        pictureScale = photograph.transform.localScale = new Vector3(2f, 1.12f, 0);
+        picturePosition = photograph.transform.position = new Vector3(0, 5f, 0);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+     
+    }
+
+    
+
+    public void ImageClick()
+    {
+        if (zoomedPic)
         {
-            Debug.Log("Pressed left click, casting ray.");
-            CastRay();
+            photograph.transform.Rotate(Vector3.forward * -90);
+            photograph.transform.localScale = new Vector3(5f, 2.8f, 0);
+            photograph.transform.position = new Vector3(0, 0, 0);
+            zoomedPic = false;
+        }
+        else
+        {
+            photograph.transform.Rotate(Vector3.forward * 90);
+            photograph.transform.localScale = pictureScale;
+            photograph.transform.position = picturePosition;
+            zoomedPic = true;
         }
     }
 
-    void CastRay()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-        // Debug.Log("Hit object: " + hit.collider.gameObject.name+" "+ hit.collider.gameObject.name.Trim().Equals("Family-Pic"));
-        if (hit.collider != null && hit.collider.gameObject.name.Trim().Equals("Family-pic"))
-        {
-            // Debug.DrawLine(ray.origin, hit.point);
-            if (zoomedPic)
-            {
-                hit.collider.gameObject.transform.Rotate(Vector3.forward * -90);
-                hit.collider.gameObject.transform.localScale = new Vector3(2f, 1f, 0);
-                hit.collider.gameObject.transform.position = new Vector3(0, 0, 0);
-                zoomedPic = false;
-            }
-            else
-            {
-                hit.collider.gameObject.transform.Rotate(Vector3.forward * 90);
-                hit.collider.gameObject.transform.localScale = pictureScale;
-                hit.collider.gameObject.transform.position = picturePosition;
-                zoomedPic = true;
-            }
-
-        }
-    }
-
-    void LoadPhotograph()
-    {
-        GameObject photObject = GameObject.FindGameObjectWithTag("picture");
-        //rend.sprite = photograph;
-        pictureScale = photObject.transform.localScale = new Vector3(1f, 0.56f, 0);
-        picturePosition = photObject.transform.position = new Vector3(0, 6.5f, 0);
-        // GetComponent<SpriteRenderer>().sprite = photograph;
-    }
+   
 
     private void CreateTiles()
     {
