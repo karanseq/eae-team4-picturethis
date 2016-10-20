@@ -14,6 +14,13 @@ public class PlayView : MonoBehaviour
 
     [SerializeField]
     GameObject tile;
+
+    [SerializeField]
+    GameObject fireworkParticle;
+
+    [SerializeField]
+    GameObject burstParticle;
+
     private static readonly int COLUMNS = 10;
     private static readonly int ROWS = 10;
     internal static readonly int EMPTY_TILE_INDEX = 52;
@@ -50,6 +57,7 @@ public class PlayView : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
         backButton= GameObject.FindGameObjectWithTag("BackButton");
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
         finishObjects = GameObject.FindGameObjectsWithTag("GameOverScreen");
@@ -250,6 +258,8 @@ public class PlayView : MonoBehaviour
             currentPuzzle = serializer.Deserialize(stream) as Puzzle;
         }
 
+        photograph.sprite = Resources.Load<Sprite>("Pictures/" + currentPuzzle.picture);
+
         // set tiles for each letter of each word
         foreach (var word in currentPuzzle.words)
         {
@@ -352,13 +362,21 @@ public class PlayView : MonoBehaviour
         }
         if (isCorrect)
         {
+            Vector3 centerPosition = Vector3.zero;
+            int letterIndex = 0;
             foreach (var letter in word.letters)
             {
                 grid[letter.index].GetComponent<Tile>().isPlayable = false;
                // grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[(GetIndexFromLetter(letter.value[0]) + 26)];
 
+                if (letterIndex == (word.letters.Count / 2))
+                {
+                    centerPosition = grid[letter.index].transform.position;
+                }
+                ++letterIndex;
             }
             Debug.Log("Word is correct");
+            ShowBurstParticle(centerPosition);
 
             AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
             source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[0]);
@@ -366,7 +384,9 @@ public class PlayView : MonoBehaviour
             AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(0, 0, 0));
             if (CheckPuzzleComplete())
             {
+                fireworkParticle.SetActive(true);
                 AudioSource.PlayClipAtPoint(puzzleCompleted, new Vector3(0, 0, 0));
+
                 ShowFinishScreen();
             }
         }
@@ -415,6 +435,19 @@ public class PlayView : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("PuzzleSelect");
+    }
+
+    private void ShowBurstParticle(Vector3 position)
+    {
+        Debug.Log("Show burst particle at:" + position.x + "," + position.y);
+        burstParticle.SetActive(true);
+        burstParticle.transform.position = position;
+        Invoke("HideBurstParticle", 2);
+    }
+
+    private void HideBurstParticle()
+    {
+        burstParticle.SetActive(false);
     }
 }
 
