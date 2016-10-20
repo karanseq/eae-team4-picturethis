@@ -14,12 +14,18 @@ public class PuzzleInfo : MonoBehaviour {
     {
         SceneManager.LoadScene("PuzzleView");
         Debug.Log("PuzzleInfo says puzzle-name:" + PuzzleInfoInstance.Instance.puzzleName + " num-names:" + PuzzleInfoInstance.Instance.names.Count);
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     public void OnBackButtonClicked()
     {
         SceneManager.LoadScene("MainMenu");
         PuzzleInfoInstance.Instance.ResetPuzzleInfo();
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     public void OnPuzzleNameEdited(string text)

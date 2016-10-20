@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class PlayView : MonoBehaviour
 {
+    [SerializeField]
+    Button hintButton;
 
     [SerializeField]
     GameObject tile;
@@ -21,8 +23,7 @@ public class PlayView : MonoBehaviour
     public Sprite[] tileSprites;
     public List<GameObject> grid = new List<GameObject>();
     bool zoomedPic = true;
-    Vector3 pictureScale;
-    Vector3 picturePosition;
+    Vector3 initialPosition = Vector3.zero;
 
     public List<GameObject> alphabetGrid = new List<GameObject>();
     public Puzzle currentPuzzle = null;
@@ -42,6 +43,9 @@ public class PlayView : MonoBehaviour
 
     GameObject[] finishObjects;
 
+    private bool isHintAvailable = false;
+    private int hintTimer = 5;
+
     // Use this for initialization
     void Start()
     {
@@ -52,17 +56,19 @@ public class PlayView : MonoBehaviour
         CreateTiles();
         CreateAlphabetTiles();
         ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
+
+        isHintAvailable = false;
+        hintButton.interactable = false;
+        Invoke("EnableHint", hintTimer);
     }
 
    
 
     private void LoadImage()
     {
-        photograph = GameObject.FindObjectOfType<Image>();
-        loadPic = Resources.Load<Sprite>("Family-pic");
+        loadPic = Resources.Load<Sprite>("photo2");
         photograph.sprite = loadPic;
-        pictureScale = photograph.transform.localScale = new Vector3(2f, 1.12f, 0);
-        picturePosition = photograph.transform.position = new Vector3(0, 5f, 0);
+        initialPosition = photograph.transform.position;
     }
 
     // Update is called once per frame
@@ -78,15 +84,15 @@ public class PlayView : MonoBehaviour
         if (zoomedPic)
         {
             photograph.transform.Rotate(Vector3.forward * -90);
-            photograph.transform.localScale = new Vector3(5f, 2.8f, 0);
-            photograph.transform.position = new Vector3(0, 0, 0);
+            photograph.transform.localScale = new Vector3(1f, 1f, 1f);
+            //photograph.transform.position = new Vector3(initialPosition.x, 0, 0);
             zoomedPic = false;
         }
         else
         {
             photograph.transform.Rotate(Vector3.forward * 90);
-            photograph.transform.localScale = pictureScale;
-            photograph.transform.position = picturePosition;
+            photograph.transform.localScale = new Vector3(0.535f, 0.535f, 1);
+            //photograph.transform.position = initialPosition;
             zoomedPic = true;
         }
     }
@@ -162,15 +168,18 @@ public class PlayView : MonoBehaviour
 
     private void CreateAlphabetTiles()
     {
-        var offset_x = -3.5f;
-        var offset_y = -6.5f;
+        var offset_x = -3.75f;
+        var offset_y = -7f;
 
+        // TWO rows
         for (int i = 0; i < 2; ++i)
         {
-            for (int j = 0; j < COLUMNS; ++j)
+            // SIX columns
+            for (int j = 0; j < 6; ++j)
             {
                 GameObject newTile = Instantiate(tile) as GameObject;
-                newTile.transform.position = new Vector3(offset_x + j * 0.7f, offset_y - i * 0.7f, 0);
+                newTile.transform.position = new Vector3(offset_x + j * 1.5f, offset_y - i * 1.25f, 0);
+                newTile.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 newTile.name = "AlphabetTile" + i + "," + j;
                 newTile.SetActive(false);
                 alphabetGrid.Add(newTile);
@@ -184,7 +193,7 @@ public class PlayView : MonoBehaviour
         System.Random rnd = new System.Random();
         for (int i = 0; i < 4; i++)
         {
-            index = rnd.Next(0, 20);
+            index = rnd.Next(0, 12);
             if (!alphabetGrid[index].activeSelf)
             {
                 int letterIndex = rnd.Next(97, 124);
@@ -198,7 +207,7 @@ public class PlayView : MonoBehaviour
         }
         while (true)
         {
-            index = rnd.Next(0, 20);
+            index = rnd.Next(0, 12);
             if (!alphabetGrid[index].activeSelf)
             {
                 int letterIndex = GetIndexFromLetter(letter.value[0]);
@@ -227,10 +236,14 @@ public class PlayView : MonoBehaviour
     private void ReadPuzzle(string filePath)
     {
         System.Random rnd = new System.Random();
-        // deserialize the file
-        var serializer = new XmlSerializer(typeof(Puzzle));
-        var stream = new FileStream(filePath, FileMode.Open);
-        currentPuzzle = serializer.Deserialize(stream) as Puzzle;
+
+        if (currentPuzzle == null)
+        {
+            // deserialize the file
+            var serializer = new XmlSerializer(typeof(Puzzle));
+            var stream = new FileStream(filePath, FileMode.Open);
+            currentPuzzle = serializer.Deserialize(stream) as Puzzle;
+        }
 
         // set tiles for each letter of each word
         foreach (var word in currentPuzzle.words)
@@ -272,6 +285,32 @@ public class PlayView : MonoBehaviour
     public void OnBackButtonClicked()
     {
         SceneManager.LoadScene("PuzzleSelect");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
+    }
+
+    public void OnHintButtonClicked()
+    {
+        if (!isHintAvailable)
+        {
+            return;
+        }
+
+        isHintAvailable = false;
+        hintButton.interactable = false;
+        Invoke("EnableHint", hintTimer);
+    }
+
+    private void EnableHint()
+    {
+        if (isHintAvailable)
+        {
+            return;
+        }
+
+        isHintAvailable = true;
+        hintButton.interactable = true;
     }
 
     internal void CheckWord(Word word)
@@ -294,6 +333,10 @@ public class PlayView : MonoBehaviour
 
             }
             Debug.Log("Word is correct");
+
+            AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+            source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[0]);
+
             AudioSource.PlayClipAtPoint(wordFinishCorrect, new Vector3(0, 0, 0));
             if (CheckPuzzleComplete())
             {
@@ -343,10 +386,6 @@ public class PlayView : MonoBehaviour
         ResetAlphabetTiles();
     }
 
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("PuzzleSelect");

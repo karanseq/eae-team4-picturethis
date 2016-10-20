@@ -203,6 +203,9 @@ public class PuzzleView : MonoBehaviour
     {
         PuzzleInfoInstance.Instance.ResetPuzzleInfo();
         SceneManager.LoadScene("MainMenu");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     public void OnResetButtonClicked()
@@ -210,6 +213,9 @@ public class PuzzleView : MonoBehaviour
         horizontalWords.Clear();
         verticalWords.Clear();
         GeneratePuzzle();
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     public void OnSaveButtonClicked()
@@ -217,6 +223,9 @@ public class PuzzleView : MonoBehaviour
         ExportPuzzle();
         PuzzleInfoInstance.Instance.ResetPuzzleInfo();
         SceneManager.LoadScene("MainMenu");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     private int GetIndexFromLetter(char letter)

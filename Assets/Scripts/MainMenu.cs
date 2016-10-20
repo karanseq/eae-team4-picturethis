@@ -12,10 +12,16 @@ public class MainMenu : MonoBehaviour {
     public void OnPlayClicked()
     {
         SceneManager.LoadScene("PuzzleSelect");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 
     public void OnCreateClicked()
     {
         SceneManager.LoadScene("PuzzleInfo");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 }

@@ -10,6 +10,8 @@ public class PuzzleInfoInstance : MonoBehaviour {
         set;
     }
 
+    public AudioClip[] audioClips = null;
+
     void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);

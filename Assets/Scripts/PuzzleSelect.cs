@@ -66,11 +66,17 @@ public class PuzzleSelect : MonoBehaviour {
         {
             PuzzleInfoInstance.Instance.puzzleName = puzzleButton.transform.GetChild(0).gameObject.GetComponent<Text>().text;
             SceneManager.LoadScene("PlayView");
+
+            AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+            source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
         }
     }
 
     public void OnBackButtonClicked()
     {
         SceneManager.LoadScene("MainMenu");
+
+        AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
+        source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
     }
 }
