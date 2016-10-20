@@ -7,7 +7,8 @@ public class PuzzleInfo : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        PuzzleInfoInstance.Instance.ResetPuzzleInfo();
+        PuzzleInfoInstance.Instance.puzzleName = "";
+        PuzzleInfoInstance.Instance.names.Clear();
     }
 
     public void OnCreateButtonClicked()
@@ -22,7 +23,8 @@ public class PuzzleInfo : MonoBehaviour {
     public void OnBackButtonClicked()
     {
         SceneManager.LoadScene("MainMenu");
-        PuzzleInfoInstance.Instance.ResetPuzzleInfo();
+        PuzzleInfoInstance.Instance.puzzleName = "";
+        PuzzleInfoInstance.Instance.names.Clear();
 
         AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
         source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
@@ -36,7 +38,8 @@ public class PuzzleInfo : MonoBehaviour {
     public void OnPersonNameEdited(string text)
     {
         Debug.Log("OnPersonNameEdited:" + text);
-        text.Trim();
+        text = text.Trim();
+        text = text.ToLower();
         if (text != "")
         {
             PuzzleInfoInstance.Instance.names.Add(text);

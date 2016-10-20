@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PuzzleView : MonoBehaviour
 {
     [SerializeField]
     GameObject tile;
+    [SerializeField]
+    Image picture;
 
     private static readonly int COLUMNS = 10;
     private static readonly int ROWS = 10;
@@ -29,33 +32,22 @@ public class PuzzleView : MonoBehaviour
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
 
         // initialize
-        AddTestWords();
+        SetPicture();
+        SetWords();
         CreateTiles();
 
         // generate
         GeneratePuzzle();
     }
 	
-	// Update is called once per frame
-	void Update ()
+	private void SetPicture()
     {
-        
+        //var picturePath = "Assets/Resources/Pictures/" + PuzzleInfoInstance.Instance.pictureName;
+        picture.sprite = Resources.Load<Sprite>("Pictures/" + PuzzleInfoInstance.Instance.pictureName);
     }
 
-    private void AddTestWords()
+    private void SetWords()
     {
-        /*words.Add("karan");
-        //words.Add("sequeira");
-        words.Add("jeremy");
-        //words.Add("hodges");
-        words.Add("bryan");
-        //words.Add("sorensen");
-        words.Add("lulu");
-        //words.Add("hedrick");
-        words.Add("yukun");
-        //words.Add("peng");
-        words.Add("ajay");
-        //words.Add("satish");*/
         words = PuzzleInfoInstance.Instance.names;
     }
 
@@ -68,7 +60,7 @@ public class PuzzleView : MonoBehaviour
     private void CreateTiles()
     {
         var offset_x = -3.5f;
-        var offset_y = 3.5f;
+        var offset_y = 1.75f;
 
         for (int i = 0; i < board.N; ++i)
         {
@@ -156,6 +148,7 @@ public class PuzzleView : MonoBehaviour
     {
         var puzzle = new Puzzle();
         puzzle.name = PuzzleInfoInstance.Instance.puzzleName;
+        puzzle.picture = PuzzleInfoInstance.Instance.pictureName;
 
         // add horizontal words
         foreach (KeyValuePair<string, Tuple<int, int, int>> hWord in horizontalWords)

@@ -20,40 +20,17 @@ public class PuzzleInfoInstance : MonoBehaviour {
 	
 	void Start ()
     {
-	
-	}
+
+    }
 
     public void ResetPuzzleInfo()
     {
+        pictureName = "";
         puzzleName = "";
         names.Clear();
     }
 
+    public string pictureName = "";
     public string puzzleName = "";
     public List<string> names = new List<string>();
-
-   /* public string PuzzleName
-    {
-        get
-        {
-            return puzzleName;
-        }
-        set
-        {
-            puzzleName = value;
-        }
-    }
-
-    public List<string> Names
-    {
-        get
-        {
-            return names;
-        }
-    }
-
-    public void AddName(string name)
-    {
-        names.Add(name);
-    }*/
 }

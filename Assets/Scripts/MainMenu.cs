@@ -19,7 +19,7 @@ public class MainMenu : MonoBehaviour {
 
     public void OnCreateClicked()
     {
-        SceneManager.LoadScene("PuzzleInfo");
+        SceneManager.LoadScene("PictureSelect");
 
         AudioSource source = PuzzleInfoInstance.Instance.gameObject.GetComponent<AudioSource>();
         source.PlayOneShot(PuzzleInfoInstance.Instance.audioClips[3]);
