@@ -48,8 +48,8 @@ public class PlayView : MonoBehaviour
     public AudioClip puzzleCompleted;
     public AudioClip letterAdded;
     public AudioClip wordSelected;
-
-    GameObject[] finishObjects;
+    [SerializeField]
+    GameObject finishObjects;
 
     private bool isHintAvailable = false;
     private int hintTimer = 5;
@@ -60,7 +60,7 @@ public class PlayView : MonoBehaviour
 
         backButton= GameObject.FindGameObjectWithTag("BackButton");
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
-        finishObjects = GameObject.FindGameObjectsWithTag("GameOverScreen");
+        //finishObjects = GameObject.FindGameObjectWithTag("GameOverScreen");
         HideFinishScreen();
         LoadImage();
         CreateTiles();
@@ -194,6 +194,8 @@ public class PlayView : MonoBehaviour
             for (int j = 0; j < 6; ++j)
             {
                 GameObject newTile = Instantiate(tile) as GameObject;
+                Tile tempTile = newTile.GetComponent<Tile>();
+                tempTile.playView = this;
                 newTile.transform.position = new Vector3(offset_x + j * 1.5f, offset_y - i * 1.25f, 0);
                 newTile.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 newTile.name = "AlphabetTile" + i + "," + j;
@@ -420,19 +422,16 @@ public class PlayView : MonoBehaviour
 
     private void HideFinishScreen()
     {
-        foreach (GameObject g in finishObjects)
-        {
-            g.SetActive(false);
-        }
+      
     }
 
     private void ShowFinishScreen()
     {
-        foreach (GameObject g in finishObjects)
-        {
-            g.SetActive(true);
-        }
+        
+            finishObjects.SetActive(true);
+       
         ResetAlphabetTiles();
+        Invoke("LoadMainMenu",4);
     }
 
     public void LoadMainMenu()
