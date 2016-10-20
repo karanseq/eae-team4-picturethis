@@ -194,6 +194,9 @@ public class PlayView : MonoBehaviour
             for (int j = 0; j < 6; ++j)
             {
                 GameObject newTile = Instantiate(tile) as GameObject;
+                Tile tempTile = newTile.GetComponent<Tile>();
+                tempTile.playView = this;
+
                 newTile.transform.position = new Vector3(offset_x + j * 1.5f, offset_y - i * 1.25f, 0);
                 newTile.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 newTile.name = "AlphabetTile" + i + "," + j;
