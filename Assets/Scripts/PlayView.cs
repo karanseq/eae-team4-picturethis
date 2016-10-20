@@ -48,8 +48,8 @@ public class PlayView : MonoBehaviour
     public AudioClip puzzleCompleted;
     public AudioClip letterAdded;
     public AudioClip wordSelected;
-
-    GameObject[] finishObjects;
+    [SerializeField]
+    GameObject finishObjects;
 
     private bool isHintAvailable = false;
     private int hintTimer = 5;
@@ -60,7 +60,7 @@ public class PlayView : MonoBehaviour
 
         backButton= GameObject.FindGameObjectWithTag("BackButton");
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
-        finishObjects = GameObject.FindGameObjectsWithTag("GameOverScreen");
+        //finishObjects = GameObject.FindGameObjectWithTag("GameOverScreen");
         HideFinishScreen();
         LoadImage();
         CreateTiles();
@@ -423,19 +423,16 @@ public class PlayView : MonoBehaviour
 
     private void HideFinishScreen()
     {
-        foreach (GameObject g in finishObjects)
-        {
-            g.SetActive(false);
-        }
+      
     }
 
     private void ShowFinishScreen()
     {
-        foreach (GameObject g in finishObjects)
-        {
-            g.SetActive(true);
-        }
+        
+            finishObjects.SetActive(true);
+       
         ResetAlphabetTiles();
+        Invoke("LoadMainMenu",4);
     }
 
     public void LoadMainMenu()
