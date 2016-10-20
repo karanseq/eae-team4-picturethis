@@ -9,12 +9,11 @@ public class Tile : MonoBehaviour {
     public int originalValue;
     public int newValue=-1;
     GameObject obj;
-    PlayView playView;
+    internal PlayView playView = null;
     internal bool isPlayable=true;
     // Use this for initialization
     void Start () {
-        obj = GameObject.FindGameObjectWithTag("PlayView");
-        playView = obj.GetComponent<PlayView>();
+        
     }
 	
 	// Update is called once per frame

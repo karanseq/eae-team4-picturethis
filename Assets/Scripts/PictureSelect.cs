@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PictureSelect : MonoBehaviour {
 
@@ -15,11 +16,14 @@ public class PictureSelect : MonoBehaviour {
 	void Start () {
         /*List<string> imagePaths = GetAllGalleryImagePaths();
         CreateGalleryImages(imagePaths);*/
+        PuzzleInfoInstance.Instance.pictureName = "";
 	}
 
     public void OnPictureSelected(string pictureName)
     {
         Debug.Log("Picture selected:" + pictureName);
+        PuzzleInfoInstance.Instance.pictureName = pictureName;
+        SceneManager.LoadScene("PuzzleInfo");
     }
 
     private List<string> GetAllGalleryImagePaths()

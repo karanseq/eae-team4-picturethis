@@ -109,6 +109,9 @@ public class PlayView : MonoBehaviour
             for (int j = 0; j < COLUMNS; ++j)
             {
                 GameObject newTile = Instantiate(tile) as GameObject;
+                Tile tempTile = newTile.GetComponent<Tile>();
+                tempTile.playView = this;
+
                 newTile.transform.position = new Vector3(offset_x + j * 0.7f, offset_y - i * 0.7f, 0);
                 newTile.name = "Tile" + i + "," + j;
                 newTile.SetActive(false);
