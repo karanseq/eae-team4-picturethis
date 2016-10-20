@@ -22,13 +22,14 @@ public class PlayView : MonoBehaviour
 
     public Sprite[] tileSprites;
     public List<GameObject> grid = new List<GameObject>();
-    bool zoomedPic = true;
+    bool toggleZoom = true;
     Vector3 initialPosition = Vector3.zero;
 
     public List<GameObject> alphabetGrid = new List<GameObject>();
     public Puzzle currentPuzzle = null;
     Sprite loadPic;
     public Image photograph;
+    GameObject backButton;
 
     public List<int> letterLocations = new List<int>();
 
@@ -49,6 +50,7 @@ public class PlayView : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        backButton= GameObject.FindGameObjectWithTag("BackButton");
         tileSprites = Resources.LoadAll<Sprite>("Word_Tiles");
         finishObjects = GameObject.FindGameObjectsWithTag("GameOverScreen");
         HideFinishScreen();
@@ -81,19 +83,22 @@ public class PlayView : MonoBehaviour
 
     public void ImageClick()
     {
-        if (zoomedPic)
+       // GameObject backButton = ;
+        if (toggleZoom)
         {
             photograph.transform.Rotate(Vector3.forward * -90);
-            photograph.transform.localScale = new Vector3(1f, 1f, 1f);
-            //photograph.transform.position = new Vector3(initialPosition.x, 0, 0);
-            zoomedPic = false;
+            photograph.transform.localScale = new Vector3(0.96f, 0.96f, 1f);
+            photograph.transform.position = new Vector3(5.45f, -0.02f, 0);
+            toggleZoom = false;
+            backButton.SetActive(false);
         }
         else
         {
             photograph.transform.Rotate(Vector3.forward * 90);
             photograph.transform.localScale = new Vector3(0.535f, 0.535f, 1);
-            //photograph.transform.position = initialPosition;
-            zoomedPic = true;
+            photograph.transform.position = initialPosition;
+            toggleZoom = true;
+            backButton.SetActive(true);
         }
     }
 
@@ -299,10 +304,31 @@ public class PlayView : MonoBehaviour
         {
             return;
         }
-
         isHintAvailable = false;
         hintButton.interactable = false;
         Invoke("EnableHint", hintTimer);
+
+        foreach(var letter in tempWord.letters)
+        {
+            Debug.Log(grid[letter.index].GetComponent<Tile>().isPlayable+" "+ grid[letter.index].GetComponent<Tile>().newValue);
+            if(grid[letter.index].GetComponent<Tile>().isPlayable && grid[letter.index].GetComponent<Tile>().newValue==-1)
+            {
+                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                grid[letter.index].GetComponent<Tile>().newValue = GetIndexFromLetter(letter.value[0]);
+                grid[letter.index].GetComponent<Tile>().isPlayable = false;
+                foreach(var alphabet in alphabetGrid)
+                {
+                    if (grid[letter.index].GetComponent<Tile>().newValue == alphabet.GetComponent<Tile>().originalValue)
+                    {
+                       int index= alphabet.GetComponent<Tile>().position;
+                        alphabetGrid[index].SetActive(false);
+                        break;
+                    }
+                }
+                
+                break;
+            }
+        }
     }
 
     private void EnableHint()
