@@ -296,10 +296,31 @@ public class PlayView : MonoBehaviour
         {
             return;
         }
-
         isHintAvailable = false;
         hintButton.interactable = false;
         Invoke("EnableHint", hintTimer);
+
+        foreach(var letter in tempWord.letters)
+        {
+            Debug.Log(grid[letter.index].GetComponent<Tile>().isPlayable+" "+ grid[letter.index].GetComponent<Tile>().newValue);
+            if(grid[letter.index].GetComponent<Tile>().isPlayable && grid[letter.index].GetComponent<Tile>().newValue==-1)
+            {
+                grid[letter.index].GetComponent<SpriteRenderer>().sprite = tileSprites[GetIndexFromLetter(letter.value[0])];
+                grid[letter.index].GetComponent<Tile>().newValue = GetIndexFromLetter(letter.value[0]);
+                grid[letter.index].GetComponent<Tile>().isPlayable = false;
+                foreach(var alphabet in alphabetGrid)
+                {
+                    if (grid[letter.index].GetComponent<Tile>().newValue == alphabet.GetComponent<Tile>().originalValue)
+                    {
+                       int index= alphabet.GetComponent<Tile>().position;
+                        alphabetGrid[index].SetActive(false);
+                        break;
+                    }
+                }
+                
+                break;
+            }
+        }
     }
 
     private void EnableHint()
