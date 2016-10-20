@@ -29,7 +29,17 @@ public class PuzzleSelect : MonoBehaviour {
 
     private void PopulatePuzzleFileNames()
     {
-        var dirInfo = new DirectoryInfo("Assets/Data/");
+        string path = "";
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+        //{
+        //    path = "Assets/Data/";
+        //}
+        //else if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Application.persistentDataPath + "/";
+        }
+
+        var dirInfo = new DirectoryInfo(path);
         var fileInfo = dirInfo.GetFiles();
         foreach (var file in fileInfo)
         {
@@ -42,11 +52,21 @@ public class PuzzleSelect : MonoBehaviour {
 
     private void CreatePuzzleList()
     {
+        string path = "";
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+        //{
+        //    path = "Assets/Data/";
+        //}
+        //else if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Application.persistentDataPath + "/";
+        }
+
         int index = 0;
         foreach (var fileName in puzzleFileNames)
         {
             XmlDocument xml = new XmlDocument();
-            xml.Load("Assets/Data/" + fileName);
+            xml.Load(path + fileName);
             XmlElement root = xml.DocumentElement;
             var puzzleName = root.GetAttribute("name").ToString();
 

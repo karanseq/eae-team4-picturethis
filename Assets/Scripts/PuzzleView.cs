@@ -187,7 +187,15 @@ public class PuzzleView : MonoBehaviour
         }
 
         var serializer = new XmlSerializer(typeof(Puzzle));
-        var stream = new FileStream("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml", FileMode.Create);
+        FileStream stream = null;
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+        //{
+        //    stream = new FileStream("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml", FileMode.Create);
+        //}
+        //else if (Application.platform == RuntimePlatform.Android)
+        {
+            stream = new FileStream(Application.persistentDataPath + "/" + PuzzleInfoInstance.Instance.puzzleName + ".xml", FileMode.Create);
+        }
         serializer.Serialize(stream, puzzle);
         stream.Close();
     }

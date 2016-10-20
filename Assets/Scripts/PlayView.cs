@@ -65,7 +65,15 @@ public class PlayView : MonoBehaviour
         LoadImage();
         CreateTiles();
         CreateAlphabetTiles();
-        ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
+
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+        //{
+        //    ReadPuzzle("Assets/Data/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
+        //}
+        //else if (Application.platform == RuntimePlatform.Android)
+        {
+            ReadPuzzle(Application.persistentDataPath + "/" + PuzzleInfoInstance.Instance.puzzleName + ".xml");
+        }
 
         isHintAvailable = false;
         hintButton.interactable = false;
